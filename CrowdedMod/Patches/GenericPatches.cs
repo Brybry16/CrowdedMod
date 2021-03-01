@@ -3,15 +3,15 @@ using HarmonyLib;
 using UnhollowerBaseLib;
 using UnityEngine;
 
-using PlayerControl = FFGALNAPKCD;
-using PlayerTab = MAOILGPNFND;
-using GameData = EGLJNOMOGNP;
-using Palette = LOCPGOACAJF;
-using PingTracker = ELDIDNABIPI;
-using ShipStatus = HLBNNHFCNAJ;
-using GameSettingMenu = JCLABFFHPEO;
-using GameOptionsMenu = PHCKLDDNJNP;
-using NumberOption = PCGDGFIAJJI;
+// using PlayerControl = FFGALNAPKCD;
+// using PlayerTab = MAOILGPNFND;
+// using GameData = EGLJNOMOGNP;
+// using Palette = LOCPGOACAJF;
+// using PingTracker = ELDIDNABIPI;
+// using ShipStatus = HLBNNHFCNAJ;
+// using GameSettingMenu = JCLABFFHPEO;
+// using GameOptionsMenu = PHCKLDDNJNP;
+// using NumberOption = PCGDGFIAJJI;
 
 namespace CrowdedMod.Patches {
 	static class GenericPatches {
@@ -30,7 +30,7 @@ namespace CrowdedMod.Patches {
 
 			static bool checkId(GameData __instance, int id) {
 				foreach (var p in __instance.AllPlayers)
-					if (p.JKOMCOJCAID == id)
+					if (p.PlayerId == id)
 						return false;
 				return true;
 			}
@@ -47,9 +47,9 @@ namespace CrowdedMod.Patches {
 		[HarmonyPatch(typeof(PlayerTab), nameof(PlayerTab.UpdateAvailableColors))]
 		static class PlayerTabUpdateAvailableColorsPatch {
 			public static bool Prefix(PlayerTab __instance) {
-				PlayerControl.SetPlayerMaterialColors(PlayerControl.LocalPlayer.NDGFFHMFGIG.EHAHBDFODKC, __instance.DemoImage);
-				for (int i = 0; i < Palette.OPKIKLENHFA.Length; i++)
-					__instance.LGAIKONLBIG.Add(i);
+				PlayerControl.SetPlayerMaterialColors(PlayerControl.LocalPlayer.Data.ColorId, __instance.DemoImage);
+				for (int i = 0; i < Palette.PlayerColors.Length; i++)
+					__instance.AvailableColors.Add(i);
 				return false;
 			}
 		}

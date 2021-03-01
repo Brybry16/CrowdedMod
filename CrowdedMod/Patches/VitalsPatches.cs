@@ -2,17 +2,17 @@
 using HarmonyLib;
 using System.Linq;
 
-using PlayerControl = FFGALNAPKCD;
-using PlayerTask = PILBGHDHJLH;
-using VitalsMinigame = JOFALPIHHOI;
-using VitalsPanel = KMDJIBIMJIH;
-using Palette = LOCPGOACAJF;
-using HudOverrideTask = LFOILEODBMA;
+// using PlayerControl = FFGALNAPKCD;
+// using PlayerTask = PILBGHDHJLH;
+// using VitalsMinigame = JOFALPIHHOI;
+// using VitalsPanel = KMDJIBIMJIH;
+// using Palette = LOCPGOACAJF;
+// using HudOverrideTask = LFOILEODBMA;
 
 namespace CrowdedMod.Patches {
 	internal static class VitalsPatches
 	{
-		static int currentPage = 0;
+		static int currentPage;
 		const int maxPerPage = 10;
 		static int maxPages => (int)Mathf.Ceil((float)PlayerControl.AllPlayerControls.Count / maxPerPage);
 
@@ -22,8 +22,8 @@ namespace CrowdedMod.Patches {
 			public static void Postfix(VitalsMinigame __instance)
 			{
 				//Fix the name of each player (better multi color handling)
-				VitalsPanel[] vitalsPanels = __instance.MILGJPIGONF;
-				foreach (string color in Palette.OKIPHGGAPMH)//Palette.ShortColorNames
+				VitalsPanel[] vitalsPanels = __instance.vitals;
+				foreach (string color in Palette.ShortColorNames)//Palette.ShortColorNames
 				{
 					VitalsPanel[] colorFiltered = vitalsPanels.Where(panel => panel.Text.Text.Equals(color)).ToArray();
 					if (colorFiltered.Length <= 1)
@@ -42,7 +42,7 @@ namespace CrowdedMod.Patches {
 		{
 			public static void Postfix(VitalsMinigame __instance)
             {
-                if (PlayerTask.PlayerHasTaskOfType<HudOverrideTask>(PlayerControl.LocalPlayer))
+                if (PlayerTask.PlayerHasTaskOfType<LFOILEODBMA>(PlayerControl.LocalPlayer))
                     return;
 				//Allow to switch pages
 				if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.mouseScrollDelta.y > 0f)
@@ -51,7 +51,7 @@ namespace CrowdedMod.Patches {
 					currentPage = Mathf.Clamp(currentPage + 1, 0, maxPages - 1);
 
 				//Place dead players at the beginning, disconnected at the end
-				VitalsPanel[] vitalsPanels = __instance.MILGJPIGONF.OrderBy(x => (x.IsDead ? 0 : 1) + (x.IsDiscon ? 2 : 0)).ToArray();//VitalsPanel[] //Sorted by: Dead -> Alive -> dead&disc -> alive&disc
+				VitalsPanel[] vitalsPanels = __instance.vitals.OrderBy(x => (x.IsDead ? 0 : 1) + (x.IsDiscon ? 2 : 0)).ToArray();//VitalsPanel[] //Sorted by: Dead -> Alive -> dead&disc -> alive&disc
 				int i = 0;
 
 				//Show/hide/move each panel
